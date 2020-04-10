@@ -21,12 +21,14 @@ winning_candidate = ""
 winning_count = 0
 winning_percentage = 0
 #create a list for counties       
-counties = []
+counties_names = []
+county_votes ={}
 #create a dictionary for counties and votes cast in each of them
 counties_dict = {}
 #create an empty string that will hold the largest turnout variable
 largest_turnout = ""
 county_percentage = 0
+votes_by_county = 0
 with open(file_to_load) as election_data:
   #to do: read and analyze data here
     file_reader = csv.reader(election_data)
@@ -44,20 +46,22 @@ with open(file_to_load) as election_data:
       candidate_votes[candidate_name] += 1  
       county_name = row[1]  
       # getting county's name and vote cast in the dictionary
-      if county_name not in counties:
-        counties.append(county_name)
+      if county_name not in counties_names:
+        counties_names.append(county_name)
         counties_dict[county_name] = 0
       counties_dict[county_name] += 1
       #declare a variable for votes each county received
-    votes_by_county = 0
+   
     #iterate through the votes each county received
-    for county_name, votes_by_county in counties_dict.items():
-      if county_name not in counties_dict:
-        votes_by_county += 1 
     
-        # getting the percentage of votes each county received
-      county_percentage = float(votes_by_county) / float(total_votes) * 100
-      percent_count = (f"{county_name}: {county_percentage:.1f}% ({votes_by_county:,})\n")
+      
+      # if votes_by_county not in counties_dict:
+      #   counties_dict[county_name] = votes_by_county
+      #   votes_by_county += 1 
+    
+      #   # getting the percentage of votes each county received
+      # county_percentage = float(votes_by_county) / float(total_votes) * 100
+      # percent_count = (f"{county_name}: {county_percentage:.1f}% ({votes_by_county:,})\n")
       #find the number of votes for each county
       
 with open(file_to_save, "w") as txt_file:
@@ -69,14 +73,26 @@ with open(file_to_save, "w") as txt_file:
     )
   print(election_results, end = '')
   txt_file.write(election_results)
-  county_results = (f"\n"
-    f"County Votes:\n"
-    f"{county_name}: {county_percentage:.1f}% ({votes_by_county:,})\n")
-    # print out the ocunty results
-  print(county_results)
-  txt_file.write(county_results)
+  # county_results = (f"\n"
+  #   f"County Votes:\n"
+  #   f"{county_name}: {county_percentage:.1f}% ({votes_by_county:,})\n")
+  #   # print out the ocunty results
+  for key in counties_dict:
+    county_vote = counties_dict[key]
+    county_percentage = int(county_vote) / int(total_votes) * 100
+
+    county_results = (
+        f"{key}: {county_percentage: .1f}% ({county_vote:,})\n"
+    )
+    print(county_results,end="")
+ 
+    txt_file.write(county_results)
+    if(county_vote > votes_by_county):
+      votes_by_county = county_vote
+      largest_turnout = key
   #get the largest turnout for counties
-  largest_turnout = max(counties_dict, key=counties_dict.get) 
+  #largest_turnout = max(counties_dict, key=counties_dict.get) 
+  
   # print the result in the output file
   turnout = (
     f"-------------------------\n"
