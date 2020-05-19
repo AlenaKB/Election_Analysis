@@ -6,7 +6,7 @@ Calculate the voter turnout for each county as well as the percentage of votes e
 ### Technologies
 - Python
 
-## Project Description
+## Project Summary
 1. Find the number of votes each county received
 2. Calculate the percentage of total votes each county cast
 3. Find the county with the largest outcome
